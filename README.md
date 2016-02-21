@@ -31,7 +31,7 @@ Private：只能在当前源文件中使用的实体，称为私有实体。使�
 如果是私有的方法，内部的不想给别人知道，那么加private关键字
 private func setupUI(){}
 ```
-**4. 闭包一处所有子控件，不使用遍历数组那方法**
+**4. 闭包移除所有子控件，不使用遍历数组那方法**
 
 ```
 //移除一个view 的所有子控件
@@ -58,7 +58,7 @@ names.map({ (name:String) -> String in  // 正规写法
 })
 
 names.map({ name in  // 修改参数名,并且不需要显示的写参数类型。闭包会根据上下文环境来推断
-"\(name) has been map !"
+    "\(name) has been map !"
 }) 
 
 names.map({"\($0) has been map !"}) // 单行闭包
@@ -106,7 +106,6 @@ var v1=copare(array,value:500,cb:>)
 * split：某个元素是否是分隔符。
 * contains方法它可以在找到第一个目标后及早返回。只要在你真的需要所有结果的时候才使用filter方法
 
-```swift
 loadData2 ({ print("执行回调") })
 
 loadData3(){
@@ -120,7 +119,7 @@ loadData4{
 loadData5("shl") { () -> () in
     print("执行回调")
 }
-```
+
 
 6. 循环引用的问题 weak unowned
 
@@ -161,7 +160,6 @@ lazy var someClosure: (Int, String) -> String = {
 typealias Completion = (result: AnyObject?, error: NSError?) -> ()
 
 ```
-```
 
 **6. 协议**
 
@@ -186,7 +184,7 @@ func addBtnClick(){
 
 ```
 
-**7. collcetionViewLayout**
+**7. collcetionViewLayout **
 
 ```swift
 class PhotoSelectorViewLayout: UICollectionViewFlowLayout {
@@ -199,10 +197,8 @@ class PhotoSelectorViewLayout: UICollectionViewFlowLayout {
         sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
 }
-
 ```
 
-```
 **8. 可选链 **
 
 ```
@@ -250,15 +246,14 @@ class PersonName{
 * 重写属性： 通过set get didSet willSet 方法重写属性,子类重写必须加入voerride 关键字，并且子类重写可以权限变大，不能权限变小(子类不能将父类的读写属性，重写成只读属性)
 ```
 
-```
-** 10. KVC **
+**10. KVC **
+
 ```swift
 // 如果kvc 赋值出错的话，那么就会在这个方法里面处理，在这个方法里面打印key 方便调试,并且重写了这个方法，还不会crash 掉
 override func setValue(value: AnyObject?, forUndefinedKey key: String) { print(key) }
-
 ```
 
-** 11. 数组便利方法 **
+**11. 数组便利方法 **
 
 ```
 在一个序列中,往往需要获取元素的最大值或者最小值。此时可以使用 maxElement()和 minElement()函数
@@ -285,7 +280,7 @@ print("排序后:languages=\(languages1)")  // 排序后:languages=[C, Objective
 reverse()函数可以将序列中元素的倒序排列。其语法形式如下: 序列.reverse()
 ```
 
-** 12. 异常机制 **
+**12. 异常机制 **
 
 ```
 当一个函数遇到错误条件,它能报错。调用函数的地方能抛出错误消息并合理处理。
@@ -312,7 +307,6 @@ assert(age >= 0, "A person's age cannot be less than zero") // 因为 age < 0,�
 for index in 1...5 {  // 1..<5 ==(1,2,3,4)
     print("\(index) * 5 = \(index * 5)")
 }
-
 ```
 ** 15.空和运算符((Nil Coalescing Operator) ?? **
 
