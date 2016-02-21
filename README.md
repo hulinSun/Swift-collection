@@ -162,7 +162,6 @@ typealias Completion = (result: AnyObject?, error: NSError?) -> ()
 ```
 
 **6.协议**
-
 ```swift
 // 代理.注意需要加上 @objc 关键字,因为 有optional 关键字就必须要写上
 @objc protocol CustomDelegate : NSObjectProtocol {
@@ -198,7 +197,7 @@ class PhotoSelectorViewLayout: UICollectionViewFlowLayout {
 }
 ```
 
-**8. 可选链 **
+**8. 可选链**
 
 ```
 // 如果确定这个某个可选类型的值一定是有值的，那么为了方便起见，就可以使用强制解析。没有必要用可选链走下去
@@ -245,14 +244,14 @@ class PersonName{
 * 重写属性： 通过set get didSet willSet 方法重写属性,子类重写必须加入voerride 关键字，并且子类重写可以权限变大，不能权限变小(子类不能将父类的读写属性，重写成只读属性)
 ```
 
-**10. KVC **
+**10. KVC**
 
 ```swift
 // 如果kvc 赋值出错的话，那么就会在这个方法里面处理，在这个方法里面打印key 方便调试,并且重写了这个方法，还不会crash 掉
 override func setValue(value: AnyObject?, forUndefinedKey key: String) { print(key) }
 ```
 
-**11. 数组便利方法 **
+**11. 数组便利方法**
 
 ```
 在一个序列中,往往需要获取元素的最大值或者最小值。此时可以使用 maxElement()和 minElement()函数
@@ -279,7 +278,7 @@ print("排序后:languages=\(languages1)")  // 排序后:languages=[C, Objective
 reverse()函数可以将序列中元素的倒序排列。其语法形式如下: 序列.reverse()
 ```
 
-**12. 异常机制 **
+**12. 异常机制**
 
 ```
 当一个函数遇到错误条件,它能报错。调用函数的地方能抛出错误消息并合理处理。
@@ -294,20 +293,20 @@ do {
     // 有一个错误消息抛出
 }
 ```
-** 13. 断言**
+**13. 断言**
 ```
 断言，断言一个语句是否为真，如果表达式为真，那么直接就过掉，什么也不发生，如果为假，那么会触发断言，程序直接崩溃。所以发开阶段可以用，但是发布阶段不能有断言
 let age = -3
 assert(age >= 0, "A person's age cannot be less than zero") // 因为 age < 0,所以断言会触发
 ```
 
-** 14.区间运算符**
+**14.区间运算符**
 ```
 for index in 1...5 {  // 1..<5 ==(1,2,3,4)
     print("\(index) * 5 = \(index * 5)")
 }
 ```
-** 15.空和运算符((Nil Coalescing Operator) ?? **
+**15.空和运算符((Nil Coalescing Operator)**
 
 ```
 空合运算符( a ?? b )将对可选类型 a 进行空判断,如果 a 包含一个值就进行解封,否则就返回一个默认值 b .这 个运算符有两个条件:
@@ -317,7 +316,7 @@ for index in 1...5 {  // 1..<5 ==(1,2,3,4)
 
 ```
 
-** 15.字符串 **
+**15.字符串**
 ```swift
 var emptyString = "" // 空字符串字面量
 var anotherEmptyString = String() // 初始化方法
@@ -338,7 +337,7 @@ for c in emptyString.characters{ // 输出每一个字符  J N
 * 可以使用加法操作符( + )来组合两种已存在的相同类型数组 ,和字符串类似
 ```
 
-** 16.构造过程 **
+**16.构造过程**
 ```
 类初始化的时候，所有的存储属性必须要有初始值: 1.默认副初值 2.在构造函数中副初始值(针对指定构造函数)
 ```
@@ -392,7 +391,7 @@ var score: Double
 4 required构造器都是指定构造器
 ```
 
-** 17.xib 加载**
+**17.xib 加载**
 
 ```swift
 class func headerView() -> SearchHeaderView {
@@ -400,7 +399,7 @@ class func headerView() -> SearchHeaderView {
 }
 ```
 
-** 18.类型 **
+**18.类型**
 ```
 只能判断是否是自己类的实例
 if gestureRecognizer.isKindOfClass(UIPanGestureRecognizer.self){}
@@ -415,11 +414,11 @@ if object === tableViewpPanGesture 是否是同一个对象
 向下转型，从父类转换到子类 as? 或 as!
 ```
 
-** 19.@IBDesignable **
+**19.@IBDesignable**
 ```
 @IBDesignable:当应用到 UIView子类中的时候，@ IBDesignable 让 Interface Builder 知道它应该在画布上直接渲染视图。你会看到你的自定义视图在每次更改后不必编译并运行你的应用程序就会显示。
 ```
-** 20.GCD其他知识 **
+**20.GCD其他知识**
 ```
 * dispatch_barrier_async会把并行队列的运行周期分为这三个过程：
 
@@ -429,7 +428,7 @@ if object === tableViewpPanGesture 是否是同一个对象
 总的来说，dispatch_barrier_async起到了“承上启下”的作用。它保证此前的任务都先于自己执行，此后的任务也迟于自己执行。正如barrier的含义一样，它起到了一个栅栏、或是分水岭的作用。
 ```
 
-** 21. swift 单例**
+**21. swift 单例**
 
 ```swift
 class singletonClass {
@@ -437,7 +436,7 @@ class singletonClass {
     private init() {} // 这就阻止其他对象使用这个类的默认的'()'初始化方法
 }
 ```
-** 22.OC + Swift 混编 **
+**22.OC + Swift 混编**
 
 ```
 Swift代码引用OC，需依靠 Objective-C bridging header 将相关文件暴露给Swift。
@@ -454,7 +453,7 @@ File > New > File > (iOS or OS X) > Source > Header File
 *  2.把 product module name 设置为项目工程的名字。
 *  3.在你的OC文件中导入 ProjectName-Swift.h.
 ```
-** 23.RunLoop 事件处理流程 **
+**23.RunLoop 事件处理流程**
 ```
 1.通知观察者即将进入runloop处理
 2.如果存在即将发生的定时器事件,通知所有的观察者。
@@ -477,12 +476,12 @@ File > New > File > (iOS or OS X) > Source > Header File
 
 ```
 
-** 24.Extension 扩展别名**
+**24.Extension 扩展别名**
 ```
  为扩展写个牛逼的容易debug 的名字 private typealias TableViewDataSource = ViewController
 ```
 
-** 25.tabBar tintColor **
+**25.tabBar tintColor**
 
 ```
 这个属性能控制tabbitem 图片和文字的颜色
@@ -493,16 +492,16 @@ composeButton.frame.offsetInPlace(dx: CGFloat(2) * width , dy: 0)
 
 ```
 
-** 26.frame.offsetInPlace **
+**26.frame.offsetInPlace**
 ```
 titleLabel?.frame.offsetInPlace(dx: -imageView!.bounds.width * CGFloat(0.5), dy: 0)
 imageView?.frame.offsetInPlace(dx: titleLabel!.bounds.width * CGFloat(0.5), dy: 0)
 ```
 
-** 27.swift 不允许在类方法中添加用static 修饰的变量，应该提取在外面写**
-** 28.当一个控件的transform 改变的时候，那么他的frame 会改变，但是他的bounds 不会改变(scrollView做缩放的那个代理方法) **
+**27.swift 不允许在类方法中添加用static 修饰的变量，应该提取在外面写**
+**28.当一个控件的transform 改变的时候，那么他的frame 会改变，但是他的bounds 不会改变(scrollView做缩放的那个代理方法)**
 
-** 29. 按钮的监听方法不能用private ，要么把private 去掉，要么加上 @objc 告诉系统，动态检测方法并且调用 **
+**29. 按钮的监听方法不能用private ，要么把private 去掉，要么加上 @objc 告诉系统，动态检测方法并且调用**
 
 
 
