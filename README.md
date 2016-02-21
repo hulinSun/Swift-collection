@@ -202,6 +202,7 @@ class PhotoSelectorViewLayout: UICollectionViewFlowLayout {
 
 ```
 
+```
 **8. 可选链 **
 
 ```
@@ -249,6 +250,7 @@ class PersonName{
 * 重写属性： 通过set get didSet willSet 方法重写属性,子类重写必须加入voerride 关键字，并且子类重写可以权限变大，不能权限变小(子类不能将父类的读写属性，重写成只读属性)
 ```
 
+```
 ** 10. KVC **
 ```swift
 // 如果kvc 赋值出错的话，那么就会在这个方法里面处理，在这个方法里面打印key 方便调试,并且重写了这个方法，还不会crash 掉
