@@ -121,7 +121,7 @@ loadData5("shl") { () -> () in
 }
 
 
-6. 循环引用的问题 weak unowned
+7. 循环引用的问题 weak unowned
 
 * 闭包的循环引用解决方案：weak strong dance (还有一种方法是withExtendlifeTime)方法，延长生命周期
 lazy var printName: ()->() = { [weak self] in
@@ -155,13 +155,13 @@ lazy var someClosure: (Int, String) -> String = {
 
 无主引用是永远有值的，所以一定要被定义成非可选类型。用关键字 unowned。无主引用总是可以被直接访问的。
 
-7. 闭包回调： 和block 类似用法  搭配typealias
+8. 闭包回调： 和block 类似用法  搭配typealias
 // 定义闭包类型，类型别名－> 首字母一定要大写
 typealias Completion = (result: AnyObject?, error: NSError?) -> ()
 
 ```
 
-**6. 协议**
+**6.协议**
 
 ```swift
 // 代理.注意需要加上 @objc 关键字,因为 有optional 关键字就必须要写上
@@ -181,10 +181,9 @@ func addBtnClick(){
     // 通知代理
     delegate?.textViewDidChange!(self)
 }
-
 ```
 
-**7. collcetionViewLayout **
+**7.collcetionViewLayout**
 
 ```swift
 class PhotoSelectorViewLayout: UICollectionViewFlowLayout {
