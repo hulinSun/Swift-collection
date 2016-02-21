@@ -161,6 +161,7 @@ lazy var someClosure: (Int, String) -> String = {
 typealias Completion = (result: AnyObject?, error: NSError?) -> ()
 
 ```
+```
 
 **6. 协议**
 
