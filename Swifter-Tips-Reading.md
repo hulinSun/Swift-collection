@@ -291,3 +291,27 @@ String.fromCString(p.objCType)
 // {Some "{CGPoint=dd}"}
 Swift 中的处理方法 NSValue.objCType
 ```
+
+#####delegate
+一个类遵守某个协议 写weak var delegte: MyClassDelegate? 的话。会发生一下错误
+
+**weak var delegate: MyClassDelegate? 编译错误**
+
+**'weak' cannot be applied to non-class type 'MyClassDelegate**
+因为swift 中的protocol除了适用于类。还适用于enmu struct,他们本身就不通过引用计数来管理内存，所以也不可能用 weak 这样的 ARC 的概念来进行修饰
+
+想要在 Swift 中使用 weak delegate，我们就需要将 protocol 限制在 class 内。一种做法是将 protocol 声明为 Objective-C 的，这可以通过在 protocol 前面加上 @objc 关键字来达到，Objective-C 的 protocol 都只有类能实现，因此使用 weak 来修饰就合理了
+
+另一种可能更好的办法是在 protocol 声明的名字后面加上 class，这可以为编译器显式地指明这个 protocol 只能由 class 来实现。
+
+```
+@objc protocol MyClassDelegate {
+    func method()
+}
+
+protocol MyClassDelegate: class {
+    func method()
+}
+```
+
+#####关联 Associated Object
