@@ -505,3 +505,121 @@ func logIfTrue(@autoclosure predicate: () -> Bool) {
     
 logIfTrue(2 > 1)
 ```
+
+
+#####操作符
+
+**如果我们要新加操作符的话，需要先对其进行声明，告诉编译器这个符号其实是一个操作符。**
+
+```
+infix operator +* {
+    associativity none // 结合律
+    precedence 160 // 优先级 乘除150 加减140
+}
+
+func +* (left: Vector2D, right: Vector2D) -> Double {
+    return left.x * right.x + left.y * right.y
+}
+```
+
+#####func 的参数修饰
+
+```
+// 方法的参数上也是如此，我们不写修饰符的话，默认情况下所有参数都是 let 的
+func incrementor(var variable: Int) -> Int {
+    return ++variable
+}
+
+将参数写作 var 后，通过调用返回的值是正确的，而 luckyNumber 还是保持了原来的值。这说明 var 只是在方法内部作用，而不直接影响输入的值。有些时候我们会希望在方法内部直接修改输入的值，这时候我们可以使用 inout 来对参数进行修饰
+```
+
+#####Any 和AnyObject
+**AnyObject 可以代表任何 class 类型的实例  id == AnyObject?**
+
+**Any 可以表示任意类型，甚至包括方法 (func) 类型**
+
+#####可变参数
+**可变参数只能作为方法中的最后一个参数来使用,当做数组来用，但是用之前先判空，判断数组是否有值**
+
+######初始化方法顺序
+**某个类的子类中，初始化方法里语句的顺序并不是随意的，我们需要保证在当前子类实例的成员初始化完成后才能调用父类的初始化方法**
+
+```
+class Tiger: Cat {
+    let power: Int
+    override init() {
+        power = 10 // 自己的属性
+        super.init()
+        name = "tiger" // 父类的属性
+    }
+}
+```
+* 设置子类自己需要初始化的参数，power = 10
+* 调用父类的相应的初始化方法，super.init()
+* 对父类中的需要改变的成员进行设定，name = "tiger
+
+**规则**
+
+* 初始化路径必须保证对象完全初始化，这可以通过调用本类型的 designated 初始化方法来得到保证
+
+* 子类的 designated 初始化方法必须调用父类的 designated 方法，以保证父类也完成初始化。
+
+######protocol 组合
+protocol<ProtocolA, ProtocolB, ProtocolC> == protocol ProtocolD: ProtocolA, ProtocolB, ProtocolC {}
+
+
+#####static 和 class
+**swfit中“类型范围作用域” 有两个，它们分别是 static 和 class**
+
+*在非 class 的类型上下文中，我们统一使用 static 来描述类型作用域*
+
+##### ...  "a"..."z"
+
+#####AnyClass 元类型 .self
+**typealias AnyClass = AnyObject.Type**
+
+* 通过 AnyObject.Type 这种方式所得到是一个元类型 (Meta) ,比如 A.Type 代表的是 A 这个类型的类型
+* .self 可以用在类型后面取得类型本身，也可以用在某个实例后面取得这个实例本身
+
+#####接口和类方法中的self
+
+```
+protocol Copyable {
+    func copy() -> Self
+}
+
+class MyClass: Copyable {
+    var num = 1
+
+    func copy() -> Self {
+        let result = self.dynamicType.init()
+        result.num = num
+        return result
+    }
+
+    required init() {
+
+    }
+}
+```
+
+* 在这里需要的是通过一个和当前上下文 (也就是和 MyClass) 无关的，又能够指代当前类型的方式进行初始化。希望你还能记得我们在对象类型中所提到的 dynamicType，这里我们就可以使用它来做初始化，以保证方法与当前类型上下文无关，这样不论是 MyClass 还是它的子类，都可以正确地返回合适的类型满足 Self 的要求”
+
+* 编译器提示我们如果想要构建一个 Self 类型的对象的话，需要有 required 关键字修饰的初始化方法，这是因为 Swift 必须保证当前类和其子类都能响应这个 init 方法
+
+##### Opyional Map
+**方法能对数组中的所有元素应用某个规则，然后返回一个新的数组**
+
+```
+let arr = [1,2,3]
+let doubled = arr.map{
+    $0 * 2
+}
+print(doubled)
+
+// 并非只能用于数组，也能用于可选类型
+let num: Int? = 3
+let result = num.map {
+    $0 * 2
+}
+```
