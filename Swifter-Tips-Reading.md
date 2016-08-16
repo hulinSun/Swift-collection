@@ -315,3 +315,193 @@ protocol MyClassDelegate: class {
 ```
 
 #####关联 Associated Object
+Swift 关联写法有所改变
+**key 的类型在这里声明为了 Void?，并且通过 & 操作符取地址并作为 UnsafePointer<Void> 类型被传入。这在 Swift 与 C 协作和指针操作时是一种很常见的用法** 
+
+```
+// MyClassExtension.swift
+private var key: Void?
+
+extension MyClass {
+    var title: String? {
+        get {
+            return objc_getAssociatedObject(self, &key) as? String
+        }
+		set {
+            objc_setAssociatedObject(self,
+                &key, newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
+
+
+
+```
+
+#####@synchronized 在swift 中不存在。被其本质的原理写法替代
+**@synchronized 在幕后做的事情是调用了 objc_sync 中的 objc_sync_enter 和 objc_sync_exit 方法**
+
+```
+func myMethod(anObj: AnyObject!) {
+    objc_sync_enter(anObj)
+    // 在 enter 和 exit 之间 anObj 不会被其他线程改变
+    objc_sync_exit(anObj)
+}
+
+// 尾闭包封装
+func synchronized(lock: AnyObject, closure: () -> ()) {
+    objc_sync_enter(lock)
+    closure()
+    objc_sync_exit(lock)
+}
+
+func myMethodLocked(anObj: AnyObject!) {
+    synchronized(anObj) {
+        // 在括号内 anObj 不会被其他线程改变
+    }
+}
+```
+
+#####桥接转换CF 
+** OC: 对于 CF 系的 API，如果 API 的名字中含有 Create，Copy 或者 Retain 的话，在使用完成后，我们需要调用 CFRelease 来进行释放**
+
+**Swift 中我们不再需要显式地去释放带有这些关键字的内容了 (事实上，含有 CFRelease 的代码甚至无法通过编译) CF 也在arc 的管辖范围内**
+
+#####print
+使用 CustomStringConvertible 接口，这个接口定义了将该类型实例输出时所用的字符串。相对于直接在原来的类型定义中进行更改，我们更应该倾向于使用一个 extension，这样不会使原来的核心部分的代码变乱变脏
+
+```
+extension Meeting: CustomStringConvertible {
+    var description: String {
+        return "于 \(self.date) 在 \(self.place) 与 \(self.attendeeName) 进行会议"
+    }
+}
+
+print(meeting)
+// 于 2015-08-10 03:33:34 +0000 在 会议室B1 与 小明 进行会议”
+```
+
+#####异常处理机制
+NSError 的使用方式其实变相在鼓励开发者忽略错误
+
+```
+do {
+    try d.writeToFile("Hello", options: [])
+} catch let error as NSError {
+    print ("Error: \(error.domain)")
+}
+```
+
+```
+enum LoginError: ErrorType {
+    case UserNotFound, UserPasswordNotMatch
+}
+
+func login(user: String, password: String) throws {
+    //users 是 [String: String]，存储[用户名:密码]
+    if !users.keys.contains(user) {
+        throw LoginError.UserNotFound
+    }
+    if users[user] != password {
+        throw LoginError.UserPasswordNotMatch
+    }
+    print("Login successfully.")
+}
+
+// 调用
+do {
+    try login("onevcat", password: "123")
+} catch LoginError.UserNotFound {
+    print("UserNotFound")
+} catch LoginError.UserPasswordNotMatch {
+    print("UserPasswordNotMatch")
+}
+```
+**局限性:对于异步api，抛出异常的机制是不可用的**
+但是一般对于异步的API，耗时出错的可能性更大。一般用enmu 来封装一下。枚举 (enum) 类型现在是可以与其他的实例进行绑定的，我们还可以让方法返回枚举类型，然后在枚举中定义成功和错误的状态，并分别将合适的对象与枚举值进行关联
+
+```
+enum Result {
+    case Success(String)
+    case Error(NSError)
+}
+
+func doSomethingParam(param:AnyObject) -> Result {
+    //...做某些操作，成功结果放在 success 中
+    if success {
+        return Result.Success("成功完成")
+    } else {
+        let error = NSError(domain: "errorDomain", code: 1, userInfo: nil)
+        return Result.Error(error)
+    }
+}
+
+// 利用 switch 中的 let 来从枚举值中将结果取出
+let result = doSomethingParam(path)
+switch result {
+    case let .Success(ok):
+    let serverResponse = ok
+case let .Error(error):
+    let serverResponse = error.description
+}
+```
+
+**在 Swift 2 时代中的错误处理，现在一般的最佳实践是对于同步 API 使用异常机制，对于异步 API 使用泛型枚举(上面的例子是Stirng)**
+
+#####断言
+assert(-100>0, "达不到绝对零度哦")
+**断言只在debug状态有效,不在release状态起作用 。 如果release状态下，让程序终止,那么使用fatalError**
+
+##### NSNull
+NSNull 出场最多的时候就是在 JSON 解析了,如果json中某个值为控制，那么系统会默认用NSNull对象来表示，因为只能存对象
+
+#####宏定义 define
+**swift中没有宏定义**
+
+#####柯里化(Curring)
+就是把接受多个参数的方法变换成接受第一个参数的方法，并且返回接受余下的参数并且返回结果的新方法
+
+```
+func addTwoNumbers(a: Int)(num: Int) -> Int {
+    return a + num
+}
+
+let addToFour = addTwoNumbers(4)    // addToFour 是一个 Int -> Int
+let result = addToFour(num: 6)      // result = 10”
+
+
+// let result = addTwoNumbers(4)(6)
+```
+
+#####Struct mutable方法
+Struct 出来的变量是 Immutable 的，想要用一个方法去改变变量里面的值的时候必须要加上一个关键词 mutating,类的话就不需要加上mutating
+
+```
+struct User {
+    var age : Int
+    var weight : Int
+    var height : Int
+
+    mutating func gainWeight(newWeight: Int) {
+        weight += newWeight
+    }
+}
+```
+
+#####将 protocol 的方法声明为 mutating
+**swift中的协议可以被类。结构体，枚举遵守，要考虑到除了类的情况。mutating 关键字修饰方法是为了能在该方法中修改 struct 或是 enum 的变量**
+
+#####@autocolsure 自动闭包
+**@autoclosure 做的事情就是把一句表达式自动地封装成一个闭包 (closure)**
+
+```
+func logIfTrue(@autoclosure predicate: () -> Bool) {
+ // 参数名前面加上 @autoclosure 关键字
+    if predicate() {
+        println("True")
+        }
+    }
+    
+logIfTrue(2 > 1)
+```
