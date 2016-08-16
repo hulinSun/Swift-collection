@@ -503,7 +503,7 @@ imageView?.frame.offsetInPlace(dx: titleLabel!.bounds.width * CGFloat(0.5), dy: 
 
 **29. 按钮的监听方法不能用private ，要么把private 去掉，要么加上 @objc 告诉系统，动态检测方法并且调用**
 
-**读猫神Swifter 笔记见 Swifter-Tips-Reading **
+**30 .读猫神Swifter 笔记见 Swifter-Tips-Reading **
 
 
 
