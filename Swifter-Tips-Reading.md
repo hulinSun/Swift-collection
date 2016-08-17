@@ -176,6 +176,7 @@ if p is Person{}
 KVO 的目的并不是为当前类的属性提供一个钩子方法，而是为了其他不同实例对当前的某个属性 (严格来说是 keypath) 进行监听时使用的。其他实例可以充当一个订阅者的角色，当被监听的属性发生变化时，订阅者将得到通知,在Swift中也可以使用kvo,但仅限于NSObject子类中.swift为了效率，默认禁用了动态派发,将对象标记为dynamic 触发动态派发
 
 // Swift kvo 的局限性是属性需要用dynamic修饰
+
 ```
 class MyClass: NSObject {
     dynamic var date = NSDate()
@@ -209,7 +210,12 @@ class Class: NSObject {
     }
 }
 
+
+```
+
+
 #####局部scope
+
 ```
 func local(closure: ()->()) {
     closure()
@@ -228,6 +234,7 @@ override func loadView() {
 }
 
 ```
+
 在Swift中有do关键字来作为捕获异常的作用于,恰好用来当做局部作用于.可以写成如下
 
 ```
