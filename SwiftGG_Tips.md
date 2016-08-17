@@ -524,3 +524,91 @@ let maxX   = frame.maxX
 view.frame.origin.x += 10
 view.frame.origin = CGPoint(x: 10, y: 10)
 ```
+
+
+##Swift GG 进阶
+
+##### 值类型嵌套引用类型
+
+```
+class Inner {
+    var value = 42
+}
+
+struct Outer {
+    var value = 42
+    var inner = Inner()
+}
+
+var outer = Outer()
+var outer2 = outer
+outer.value = 43
+outer.inner.value = 43
+print("outer2.value=\(outer2.value) outer2.inner.value=\(outer2.inner.value)”)
+
+// outer2.value=42 outer2.inner.value=43
+```
+**尽管outer2获取了value的一份拷贝，它只拷贝了inner的引用，因此两个结构体就共用了同一个inner对象。这样一来当改变outer.inner.value的值也会影响outer2.inner.value的值**
+
+**你创建的结构体就具有写时拷贝功能（只有当你执行outer2.value = 43时才会真正的产生一个副本，否则outer2与outer仍指向共同的资源），这种高效的值语义的实现不会使数据拷贝得到处都是。Swift 中的集合就是这么做的**
+
+
+#####序列的实现方式
+**任何遵循 SequenceType 协议的类型，都可以用 for...in 的方式访问，并且同时获得像 map，flatMap，reduce等等很酷的方法。要遵循 SequenceType 协议，只有一个要求：实现 generate() 方法，该方法要求返回值遵循 GeneratorType 协议**
+
+**Generator 是代表循环的有状态的对象。Generator 必须提供一个 next() 方法——该方法返回一个可选值**
+
+```
+public protocol SequenceType {
+    typealias Generator : GeneratorType
+    typealias SubSequence
+    public func generate() -> Self.Generator
+    public func underestimateCount() -> Int
+    public func map<T>(@noescape transform: (Self.Generator.Element) -> T) -> [T]
+    public func filter(@noescape includeElement: (Self.Generator.Element) -> Bool) -> [Self.Generator.Element]
+    public func forEach(@noescape body: (Self.Generator.Element) -> ())
+    public func dropFirst(n: Int) -> Self.SubSequence
+    public func dropLast(n: Int) -> Self.SubSequence
+    public func prefix(maxLength: Int) -> Self.SubSequence
+    public func suffix(maxLength: Int) -> Self.SubSequence
+    public func split(maxSplit: Int, allowEmptySlices: Bool, @noescape isSeparator: (Self.Generator.Element) -> Bool) -> [Self.SubSequence]
+}
+```
+
+```
+public protocol CollectionType : Indexable, SequenceType {
+    typealias Generator : GeneratorType = IndexingGenerator<Self>
+    public func generate() -> Self.Generator
+    typealias SubSequence : Indexable, SequenceType = Slice<Self>
+    public subscript (position: Self.Index) -> Self.Generator.Element { get }
+    public subscript (bounds: Range<Self.Index>) -> Self.SubSequence { get }
+    public func prefixUpTo(end: Self.Index) -> Self.SubSequence
+    public func suffixFrom(start: Self.Index) -> Self.SubSequence
+    public func prefixThrough(position: Self.Index) -> Self.SubSequence
+    public var isEmpty: Bool { get }
+    public var count: Self.Index.Distance { get }
+    public var first: Self.Generator.Element? { get }
+}
+```
+
+```
+public protocol RangeReplaceableCollectionType : CollectionType {
+    public init()
+    public mutating func replaceRange<C : CollectionType where C.Generator.Element == Generator.Element>(subRange: Range<Self.Index>, with newElements: C)
+    public mutating func reserveCapacity(n: Self.Index.Distance)
+    public mutating func append(x: Self.Generator.Element)
+    public mutating func extend<S : SequenceType where S.Generator.Element == Generator.Element>(newElements: S)
+    public mutating func insert(newElement: Self.Generator.Element, atIndex i: Self.Index)
+    public mutating func splice<S : CollectionType where S.Generator.Element == Generator.Element>(newElements: S, atIndex i: Self.Index)
+    public mutating func removeAtIndex(i: Self.Index) -> Self.Generator.Element
+    public mutating func removeFirst() -> Self.Generator.Element
+    public mutating func removeFirst(n: Int)
+    public mutating func removeRange(subRange: Range<Self.Index>)  
+    public mutating func removeAll(keepCapacity keepCapacity: Bool)
+}
+```
+
+##### 实现序列和生成器<http://swift.gg/2015/09/11/sequencetype_and_generatortype/>
+
+##### try？
+**try？ 语法的优点在于你不必把可能会抛出错误的函数写在一个 do-catch 代码块当中。如果你使用了 try?，该函数的返回值就会是一个可选类型：成功返回 .Some，失败则返回 .None。你可以配合着 if-let 或者 guard 语句来使用 try? 语法。**
