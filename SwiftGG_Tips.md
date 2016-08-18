@@ -849,4 +849,167 @@ if case let (x?, y?) = myOptionalTuple {
 
 **void 的使用规范：“使用 void 返回类型，而不是 ()。”下面是一个返回 -> Void 而不是 -> () 的方法。**
 
+##### 枚举的简写
+**有时候你用的不是枚举，而是被一个又臭又长的构造器给困住**
+
+```
+animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+```
+**缩写点符号对任何类型的任何 static 成员都有效。结合在 extension 中添加自定义 property 的能力**
+
+```
+extension CAMediaTimingFunction
+{
+    // 这个属性会在第一次被访问时初始化。
+    // (需要添加 @nonobjc 来防止编译器
+    //  给 static（或者 final）属性生成动态存取器。)
+    @nonobjc static let EaseInEaseOut = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+
+    // 另外一个选择就是使用计算属性, 它同样很有效,
+    // 但 *每次* 被访问时都会重新求值：
+    static var EaseInEaseOut: CAMediaTimingFunction {
+        // .init 是 self.init 的简写
+        return .init(name: kCAMediaTimingFunctionEaseInEaseOut)
+    }
+}
+animation.timingFunction = .EaseInEaseOut
+```
+
+##### 泛型优化tableviewCell
+**链接**
+<http://swift.gg/2016/01/27/generic-tableviewcells/>
+
+```
+
+protocol Reusable: class {
+  static var reuseIdentifier: String { get }
+  static var nib: UINib? { get }
+}
+
+extension Reusable {
+  static var reuseIdentifier: String { return String(Self) }
+  static var nib: UINib? { return nil }
+}
+
+extension UITableView {
+  func registerReusableCell<T: UITableViewCell where T: Reusable>(_: T.Type) {
+    if let nib = T.nib {
+      self.registerNib(nib, forCellReuseIdentifier: T.reuseIdentifier)
+    } else {
+      self.registerClass(T.self, forCellReuseIdentifier: T.reuseIdentifier)
+    }
+  }
+
+  func dequeueReusableCell<T: UITableViewCell where T: Reusable>(indexPath indexPath: NSIndexPath) -> T {
+    return self.dequeueReusableCellWithIdentifier(T.reuseIdentifier, forIndexPath: indexPath) as! T
+  }
+
+  func registerReusableHeaderFooterView<T: UITableViewHeaderFooterView where T: Reusable>(_: T.Type) {
+    if let nib = T.nib {
+      self.registerNib(nib, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
+    } else {
+      self.registerClass(T.self, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
+    }
+  }
+
+  func dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView where T: Reusable>() -> T? {
+    return self.dequeueReusableHeaderFooterViewWithIdentifier(T.reuseIdentifier) as! T?
+  }
+}
+
+extension UICollectionView {
+  func registerReusableCell<T: UICollectionViewCell where T: Reusable>(_: T.Type) {
+    if let nib = T.nib {
+      self.registerNib(nib, forCellWithReuseIdentifier: T.reuseIdentifier)
+    } else {
+      self.registerClass(T.self, forCellWithReuseIdentifier: T.reuseIdentifier)
+    }
+  }
+
+  func dequeueReusableCell<T: UICollectionViewCell where T: Reusable>(indexPath indexPath: NSIndexPath) -> T {
+    return self.dequeueReusableCellWithReuseIdentifier(T.reuseIdentifier, forIndexPath: indexPath) as! T
+  }
+
+  func registerReusableSupplementaryView<T: Reusable>(elementKind: String, _: T.Type) {
+    if let nib = T.nib {
+      self.registerNib(nib, forSupplementaryViewOfKind: elementKind, withReuseIdentifier: T.reuseIdentifier)
+    } else {
+      self.registerClass(T.self, forSupplementaryViewOfKind: elementKind, withReuseIdentifier: T.reuseIdentifier)
+    }
+  }
+
+  func dequeueReusableSupplementaryView<T: UICollectionViewCell where T: Reusable>(elementKind: String, indexPath: NSIndexPath) -> T {
+    return self.dequeueReusableSupplementaryViewOfKind(elementKind, withReuseIdentifier: T.reuseIdentifier, forIndexPath: indexPath) as! T
+  }
+}
+```
+
+
+#####优雅的swizzle
+
+```
+extension UIViewController {
+    public override static func initialize() {
+        struct Static {
+            static var token: dispatch_once_t = 0
+        }
+
+        // 确保不是子类
+        if self !== UIViewController.self {
+            return
+        }
+
+        dispatch_once(&Static.token) {
+            let originalSelector = Selector("viewWillAppear:")
+            let swizzledSelector = Selector("newViewWillAppear:")
+
+            let originalMethod = class_getInstanceMethod(self, originalSelector)
+            let swizzledMethod = class_getInstanceMethod(self, swizzledSelector)
+
+            let didAddMethod = class_addMethod(self, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod))
+
+            if didAddMethod {
+                class_replaceMethod(self, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
+            } else {
+                method_exchangeImplementations(originalMethod, swizzledMethod);
+            }
+        }
+    }
+
+    // MARK: - Method Swizzling
+
+    func newViewWillAppear(animated: Bool) {
+        self.newViewWillAppear(animated)
+        if let name = self.descriptiveName {
+            print("viewWillAppear: \(name)")
+        } else {
+            print("viewWillAppear: \(self)")
+        }
+    }
+}
+```
+
+#####autoclosure
+**属性关键字用在函数或者方法的闭包参数前面，但是闭包类型被限定在无参闭包上：() -> T**
+
+* 使用@autoclosure关键字能简化闭包调用形式
+* 使用@autoclosure关键字能延迟闭包的执行
+
+```
+func doSomeOperation(@autoclosure op: () -> Bool) {
+    op()
+}
+// 调用如下：
+doSomeOperation(2 > 3)
+```
+**@noescape意思是非逃逸的闭包 , 将闭包标注为@noescape使你能在闭包中隐式地引用self。**
+**默认情况下是 @escape逃逸闭包 , 表示此闭包还可以被其他闭包调用**
+
+```
+func executeAsyncOp(asyncClosure: () -> ()) -> Void {
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+        asyncClosure()
+    }
+}
+```
 
