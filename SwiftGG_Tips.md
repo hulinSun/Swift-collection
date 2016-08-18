@@ -707,5 +707,91 @@ if case .Value(let value) = result {
 }
 ```
 
+#####单子和函子 （flatmap 与map）
+**链式调用的编程范式**
 
+**盒子**
 
+```
+var a : Int? = 3 // 盒子
+var b : Int? // 盒子
+b = a! + 1 // 打开盒子取出值计算 ，在放入盒子中
+b = a.map{$0 + 1}
+```
+
+map:计算之前打开盒子是自动的。计算之后封装也是自动的
+flatmap： 每次map完之后自动帮我们把两层盒子打开的函数
+
+flatmap: 对自己解包，然后引用到一个闭包F上，这个闭包f接受一个为封装的值，返回一个盒子
+map：对自己解包，然后引用到一个闭包f上，这个闭包f接受一个未分装的值，返回一个未封装的值
+
+#####枚举用法
+
+```
+let aMovement = Movement.Left
+
+// switch 分情况处理
+switch aMovement{
+case .Left: print("left")
+default:()
+}
+
+// 明确的case情况
+if case .Left = aMovement{
+    print("left")
+}
+
+if aMovement == .Left { print("left") }
+```
+
+```
+// Mercury = 1, Venus = 2, ... Neptune = 8
+enum Planet: Int {
+    case Mercury = 1, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune
+}
+
+// North = "North", ... West = "West"
+enum CompassPoint: String {
+    case North, South, East, West
+}
+```
+
+**枚举声明的类型是囊括可能状态的有限集，且可以具有附加值。通过内嵌(nesting),方法(method),关联值(associated values)和模式匹配(pattern matching),枚举可以分层次地定义任何有组织的数据。
+**
+
+**文章链接** 
+<http://swift.gg/2015/11/20/advanced-practical-enum-examples/>
+
+##### Swift 反射
+**Swift 的反射机制是基于一个叫 Mirror 的 struct 来实现的。你为具体的 subject 创建一个 Mirror，然后就可以通过它查询这个对象 subject **
+
+```
+let children: Children：对象的子节点。
+displayStyle: Mirror.DisplayStyle?：对象的展示风格
+let subjectType: Any.Type：对象的类型
+func superclassMirror() -> Mirror?：对象父类的 mirror
+
+for case let (label?, value) in aMirror.children {
+    print (label, value)
+}
+
+print(Mirror(reflecting: "test").subjectType)
+//输出 : String
+```
+
+```
+let mirror = Mirror(reflecting: self)
+
+guard mirror.displayStyle == .Struct 
+  else { throw SerializationError.StructRequired }
+
+for case let (label?, anyValue) in mirror.children {
+    if let value = anyValue as? AnyObject {
+	managedObject.setValue(child, forKey: label) 
+    } else {
+	throw SerializationError.UnsupportedSubType(label: label)
+    }
+}
+```
+
+##### 几个Swift 代码规范
