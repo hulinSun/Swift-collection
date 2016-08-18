@@ -608,7 +608,104 @@ public protocol RangeReplaceableCollectionType : CollectionType {
 }
 ```
 
-##### 实现序列和生成器<http://swift.gg/2015/09/11/sequencetype_and_generatortype/>
+##### 实现序列和生成器
+<http://swift.gg/2015/09/11/sequencetype_and_generatortype/>
+
+```
+class Library: SequenceType {
+    var currentIndex = 0
+    var books = [Book]()
+​
+    init(books: [Book]) {
+        self.books = books
+    }
+​
+    func generate() -> GeneratorOf<Book> {
+        let next: () -> Book? = {
+            if (self.currentIndex < self.books.count) {
+                return self.books[self.currentIndex++]
+            }
+            return nil
+​
+        }
+        return GeneratorOf<Book>(next)
+    }
+}
+```
+
+**SequenceType协议定义**
+
+```
+// generate方法非常关键，方法返回的类型为GeneratorType(译者注:同样是一个协议)。因此我们还需要实现GeneratorType协议，
+protocol SequenceType:_Sequence_Type{
+    typealias Generator : GeneratorType
+    func generate()->Generator
+}
+```
+
+**GeneratorType**
+
+```
+// 还需要实现next()方法
+protocol GeneratorType{
+    typealias Element
+    mutating func next()->Element?
+}
+```
+
 
 ##### try？
 **try？ 语法的优点在于你不必把可能会抛出错误的函数写在一个 do-catch 代码块当中。如果你使用了 try?，该函数的返回值就会是一个可选类型：成功返回 .Some，失败则返回 .None。你可以配合着 if-let 或者 guard 语句来使用 try? 语法。**
+
+
+##### 泛型枚举 异步API错误替代方案
+
+```
+func tryit<T>(block: () throws -> T) -> Result<T> {
+    do {
+        let value = try block()
+        return Result.Value(value)
+    } catch {return Result.Error(error)}
+}
+
+let result = tryit(myFailableCoinToss)
+```
+
+// 改进版本
+
+```
+enum Result<T> {
+    case Value(T)
+    case Error(ErrorType)
+
+    init(_ block: () throws -> T) {
+        do {
+            let value = try block()
+            self = Result.Value(value)
+        } catch {
+            self = Result.Error(error)
+        }
+    }
+}
+// 这样调用就完美了
+let result = Result(myFailableCoinToss)
+```
+
+**拆包**
+
+```
+switch result {
+case .Value(let value): print(“Success:”, value)
+case .Error(let error): print(“Failure:”, error)
+}
+
+// 模式匹配
+if case .Value(let value) = result {
+    print("Success:", value)
+} else if case .Error(let error) = result {
+    print("Failure:", error)
+}
+```
+
+
+

@@ -614,7 +614,7 @@ class MyClass: Copyable {
 
 * 编译器提示我们如果想要构建一个 Self 类型的对象的话，需要有 required 关键字修饰的初始化方法，这是因为 Swift 必须保证当前类和其子类都能响应这个 init 方法
 
-##### Opyional Map
+##### Optional Map
 **方法能对数组中的所有元素应用某个规则，然后返回一个新的数组**
 
 ```
