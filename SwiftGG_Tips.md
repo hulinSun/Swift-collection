@@ -795,3 +795,58 @@ for case let (label?, anyValue) in mirror.children {
 ```
 
 ##### 几个Swift 代码规范
+
+**如果尾部的闭包参数是函数式的就用圆括号。如果是程序式的就用花括号**
+
+```
+myCollection.map({blah}).filter({blah}).etc
+myCollection.forEach {} // 或者 
+dispatch_after(when, queue) {}
+```
+
+**self 的使用规范：“当编译器可以自动推断成员类型时，你就可以在使用隐式成员表达式时省略 self。但无论何时，只要一个方法调用会反射到一个实例，就要使用 self。“**
+
+**条件级联绑定的规范：“除非你做的是 var 和 let 混合的条件绑定，只用一个 if let 或者 if var 就可以了，需要的话可以自由添加空格**
+
+```
+if let x = x, let y = y, let z = z {blah} // 不要使用
+if let x = x, y = y, z = z {blah}  // 使用这种
+
+if let
+    // 以字典的方式访问 JSON 
+    json = json as? NSDictionary,
+
+    // 检查结果数组
+    resultsList = json["results"] as? NSArray,
+
+    // 提取第一项
+    results = resultsList.firstObject as? NSDictionary,
+
+    // 提取名字和价格
+    name = results["trackName"] as? String, 
+    price = results["price"] as? NSNumber {
+
+    // ... blah blah ...
+  }
+```
+
+**isEmpty 的使用规范：“如果你在检测一个集合元素的个数，你可能就是在犯错。”用 isEmpty 替换 count == 0。**
+
+
+**模式匹配关键字的规范：“如果都是绑定，那就要把绑定组合起来。**
+
+```
+// 不用这种
+if case (let x?, let y?) = myOptionalTuple {
+    print(x, y) 
+} 
+
+// 用这种
+if case let (x?, y?) = myOptionalTuple {
+    print(x, y)
+}
+```
+
+**void 的使用规范：“使用 void 返回类型，而不是 ()。”下面是一个返回 -> Void 而不是 -> () 的方法。**
+
+
