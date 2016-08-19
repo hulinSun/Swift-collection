@@ -1044,3 +1044,37 @@ UIView.animateWithDuration(0.3, delay: 1.0, options: [UIViewAnimationOptions.Cur
         // ...
 }, completion: nil)
 ```
+
+
+#####闭包补充
+
+```
+let names = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]
+
+// 方法1：使用普通函数(或内嵌函数)提供排序功能
+func backwards(s1:String, s2:String) -> Bool {
+    return s1 > s2
+}
+
+var reversed = sort(names, backwards)
+
+// 方法2：使用闭包表达式提供排序功能
+reversed = sort(names, {
+        (s1:String, s2:String) -> Bool in
+            return s1 > s2
+    })
+
+// 方法3：类型推断,省略闭包表达式的参数及返回类型
+reversed = sort(names, { s1, s2 in return s1 > s2})
+
+// 方法4：单一表达式：省略return关键字
+reversed = sort(names, { s1, s2 in s1 > s2 })
+
+// 方法5：速记参数名
+reversed = sort(names, { $0 > $1 })
+
+// 方法6：操作符函数
+reversed = sort(names, >)
+// 方法7：尾随闭包
+reversed = sort(names) { $0 > $1 }
+```
