@@ -1013,3 +1013,34 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
 }
 ```
 
+##### Swift Options
+**swift中没有 right|left|top 使用 option 的方法了**
+
+```
+struct Directions: OptionSetType {
+
+    var rawValue:Int
+    init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+
+    static let Up: Directions = Directions(rawValue: 1 << 0)
+    static let Down: Directions = Directions(rawValue: 1 << 1)
+    static let Left: Directions = Directions(rawValue: 1 << 2)
+    static let Right: Directions = Directions(rawValue: 1 << 3)
+}
+
+let direction: Directions = Directions.Left
+if direction == Directions.Left {
+    // ...
+}
+
+let leftUp: Directions = [Directions.Left, Directions.Up]
+if leftUp.contains(Directions.Left) && leftUp.contains(Directions.Up) {
+    // ...
+}
+
+UIView.animateWithDuration(0.3, delay: 1.0, options: [UIViewAnimationOptions.CurveEaseIn, UIViewAnimationOptions.CurveEaseInOut], animations: { () -> Void in
+        // ...
+}, completion: nil)
+```
