@@ -1,6 +1,9 @@
 ### SwiftGG - 入门
 
 ##### 理解flatmap
+**map 映射 --->盒子**
+
+**flapmap 扁平化映射 --->压平盒子的盒子**
 
 ```
 let nestedArray = [[1,2,3], [4,5,6]]
@@ -1078,3 +1081,5 @@ reversed = sort(names, >)
 // 方法7：尾随闭包
 reversed = sort(names) { $0 > $1 }
 ```
+
+
