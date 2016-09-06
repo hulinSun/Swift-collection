@@ -248,6 +248,7 @@ let minionBobImage = UIImage(assetIdentifier: .Bob)
 ##### 浅谈泛型
 
 *参照泛型的特性，我们能够定义一个泛型类型，这看起来像一个占位符*
+
 ```
 class Stack<T> {
 

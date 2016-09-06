@@ -630,3 +630,9 @@ let result = num.map {
     $0 * 2
 }
 ```
+
+#####anyclass 传值问题
+
+```
+ self.dynamicType
+```
