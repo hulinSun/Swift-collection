@@ -1084,3 +1084,34 @@ reversed = sort(names) { $0 > $1 }
 ```
 
 
+
+#####SwpieCell
+
+```
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .normal, title: "🗑\nDelete") { action, index in
+            print("Delete button tapped")
+        }
+        delete.backgroundColor = UIColor.gray
+
+        let share = UITableViewRowAction(style: .normal, title: "🤗\nShare") { (action: UITableViewRowAction!, indexPath: IndexPath) -> Void in
+            let firstActivityItem = self.data[(indexPath as NSIndexPath).row]
+            let activityViewController = UIActivityViewController(activityItems: [firstActivityItem.image as NSString], applicationActivities: nil)
+            self.present(activityViewController, animated: true, completion: nil)
+        }
+        share.backgroundColor = UIColor.red
+
+        let download = UITableViewRowAction(style: .normal, title: "⬇️\nDownload") { action, index in
+            print("Download button tapped")
+        }
+        download.backgroundColor = UIColor.blue
+        
+        return [download, share, delete]
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool { return true }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {    }
+```
+
+
