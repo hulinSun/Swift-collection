@@ -1115,3 +1115,37 @@ reversed = sort(names) { $0 > $1 }
 ```
 
 
+
+## Swift 3
+
+##### api 省略变化
+
+现在如果遇到下列几种情况将会提供自动默认的值：
+
+* 尾随闭包：可空的闭包参数，将默认为 nil
+
+* NSZones：可空的空间，将默认为 nil（提案指出，当 NSZones 已经不在 Swift 中使用时，NSZones 应该要默认为 nil）
+
+* 选项集(OptionSetType)：任何类型中名字包含 Options ，将默认为 [](空选项集)
+
+* 字典：当字典参数名字包含 options, attributes 和 info 的时候，将默认为[:](空字典)
+
+```
+rootViewController.presentViewController(
+    alert, 
+    animated: true, 
+    completion: nil)
+UIView.animateWithDuration(
+    0.2, delay: 0.0, options: [], 
+    animations: { self.logo.alpha = 0.0 }) { 
+        _ in self.logo.hidden = true 
+}
+在 Swift 3.0 中将简化为：
+rootViewController.present(alert, animated: true)
+UIView.animateWithDuration(0.2, delay: 0.0, 
+    animations: { self.logo.alpha = 0.0 }) {
+        _ in self.logo.hidden = true 
+}
+```
+
+
