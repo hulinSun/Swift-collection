@@ -172,3 +172,16 @@ Swift 3 将枚举成员当做属性来看，所以使用小写字母开头而不
 * .FillStroke 改为 .fillStroke
 * .CGColor 改为 .cgColor
 
+####@discardableResult
+在 Swift 3 中，如果没有接收某方法的返回值，Xcode 会报出警告
+
+```
+@discardableResult // 消除警告
+func printMessage(message: String) -> String {
+    let outputMessage = "Output : \(message)"
+    print(outputMessage)
+    
+    return outputMessage
+}
+```
+
