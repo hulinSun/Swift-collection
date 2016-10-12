@@ -162,6 +162,7 @@ typealias Completion = (result: AnyObject?, error: NSError?) -> ()
 ```
 
 **6.协议**
+
 ```swift
 // 代理.注意需要加上 @objc 关键字,因为 有optional 关键字就必须要写上
 @objc protocol CustomDelegate : NSObjectProtocol {
@@ -294,6 +295,7 @@ do {
 }
 ```
 **13. 断言**
+
 ```
 断言，断言一个语句是否为真，如果表达式为真，那么直接就过掉，什么也不发生，如果为假，那么会触发断言，程序直接崩溃。所以发开阶段可以用，但是发布阶段不能有断言
 let age = -3
@@ -301,6 +303,7 @@ assert(age >= 0, "A person's age cannot be less than zero") // 因为 age < 0,�
 ```
 
 **14.区间运算符**
+
 ```
 for index in 1...5 {  // 1..<5 ==(1,2,3,4)
     print("\(index) * 5 = \(index * 5)")
@@ -317,6 +320,7 @@ for index in 1...5 {  // 1..<5 ==(1,2,3,4)
 ```
 
 **15.字符串**
+
 ```swift
 var emptyString = "" // 空字符串字面量
 var anotherEmptyString = String() // 初始化方法
@@ -338,6 +342,7 @@ for c in emptyString.characters{ // 输出每一个字符  J N
 ```
 
 **16.构造过程**
+
 ```
 类初始化的时候，所有的存储属性必须要有初始值: 1.默认副初值 2.在构造函数中副初始值(针对指定构造函数)
 ```
@@ -400,6 +405,7 @@ class func headerView() -> SearchHeaderView {
 ```
 
 **18.类型**
+
 ```
 只能判断是否是自己类的实例
 if gestureRecognizer.isKindOfClass(UIPanGestureRecognizer.self){}
@@ -415,10 +421,12 @@ if object === tableViewpPanGesture 是否是同一个对象
 ```
 
 **19.@IBDesignable**
+
 ```
 @IBDesignable:当应用到 UIView子类中的时候，@ IBDesignable 让 Interface Builder 知道它应该在画布上直接渲染视图。你会看到你的自定义视图在每次更改后不必编译并运行你的应用程序就会显示。
 ```
 **20.GCD其他知识**
+
 ```
 * dispatch_barrier_async会把并行队列的运行周期分为这三个过程：
 
@@ -454,6 +462,7 @@ File > New > File > (iOS or OS X) > Source > Header File
 *  3.在你的OC文件中导入 ProjectName-Swift.h.
 ```
 **23.RunLoop 事件处理流程**
+
 ```
 1.通知观察者即将进入runloop处理
 2.如果存在即将发生的定时器事件,通知所有的观察者。
@@ -477,6 +486,7 @@ File > New > File > (iOS or OS X) > Source > Header File
 ```
 
 **24.Extension 扩展别名**
+
 ```
  为扩展写个牛逼的容易debug 的名字 private typealias TableViewDataSource = ViewController
 ```
@@ -493,6 +503,7 @@ composeButton.frame.offsetInPlace(dx: CGFloat(2) * width , dy: 0)
 ```
 
 **26.frame.offsetInPlace**
+
 ```
 titleLabel?.frame.offsetInPlace(dx: -imageView!.bounds.width * CGFloat(0.5), dy: 0)
 imageView?.frame.offsetInPlace(dx: titleLabel!.bounds.width * CGFloat(0.5), dy: 0)
@@ -503,7 +514,7 @@ imageView?.frame.offsetInPlace(dx: titleLabel!.bounds.width * CGFloat(0.5), dy: 
 
 **29. 按钮的监听方法不能用private ，要么把private 去掉，要么加上 @objc 告诉系统，动态检测方法并且调用**
 
-**30 .读猫神Swifter 笔记见 Swifter-Tips-Reading **
+**30 .读猫神Swifter 笔记见 Swifter-Tips-Reading**
 
 
 
