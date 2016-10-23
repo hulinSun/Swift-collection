@@ -17,7 +17,7 @@ let multipliedFlattenedArray = nestedArray.flatMap { array in
 multipliedFlattenedArray // [2, 4, 6, 8, 10, 12]
 ```
 
-**flatmap + 可选类型 **
+**flatmap + 可选类型**
 
 ```
 let optionalInts: [Int?] = [1, 2, nil, 4, nil, 5]
@@ -243,7 +243,8 @@ let minionBobImage = UIImage(assetIdentifier: .Bob)
 ```
 
 #####Swift2  try?抛出可选异常
-** try? ,它在代码执行失败时会抛出错误并返回可选值 None,而在执行成功的情况下，会直接返回可选值 Some。**
+
+**try? ,它在代码执行失败时会抛出错误并返回可选值 None,而在执行成功的情况下，会直接返回可选值 Some**
 
 ##### 浅谈泛型
 
@@ -278,6 +279,8 @@ aStack.pushItem(10)
 if let lastItem = aStack.popItem() {
   print("last item: \(lastItem)")
 }
+
+
 ```
 
 #####API可用性
@@ -471,7 +474,7 @@ override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
 **Target-Action 机制通过设置 target 为 nil来使用响应链。事件触发时，iOS 会询问第一响应者是否要处理传递过来的 action。如果不处理的话，第一响应者就会把该 action 传递给下一个响应者**
 
 #####带有私有设置方法的公有属性
-**Swift 可以很方便地创建带有私有设置方法的公有属性。这可以让你的代码更加安全和简洁。
+**Swift 可以很方便地创建带有私有设置方法的公有属性。这可以让你的代码更加安全和简洁。**
 
 * private(set) var area: Double = 0 ,通过在属性前面使用 private(set) ，属性就被设置为默认访问等级的 getter 方法，但是 setter 方法是私有的 
 
@@ -760,14 +763,13 @@ enum CompassPoint: String {
 }
 ```
 
-**枚举声明的类型是囊括可能状态的有限集，且可以具有附加值。通过内嵌(nesting),方法(method),关联值(associated values)和模式匹配(pattern matching),枚举可以分层次地定义任何有组织的数据。
-**
+**枚举声明的类型是囊括可能状态的有限集，且可以具有附加值。通过内嵌(nesting),方法(method),关联值(associated values)和模式匹配(pattern matching),枚举可以分层次地定义任何有组织的数据。**
 
 **文章链接** 
 <http://swift.gg/2015/11/20/advanced-practical-enum-examples/>
 
 ##### Swift 反射
-**Swift 的反射机制是基于一个叫 Mirror 的 struct 来实现的。你为具体的 subject 创建一个 Mirror，然后就可以通过它查询这个对象 subject **
+**Swift 的反射机制是基于一个叫 Mirror 的 struct 来实现的。你为具体的 subject 创建一个 Mirror，然后就可以通过它查询这个对象 subject**
 
 ```
 let children: Children：对象的子节点。
