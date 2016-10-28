@@ -224,3 +224,19 @@ extension UIImage {
 ```
 
 
+#### 通知
+
+```
+NotificationCenter.default.addObserver(tableView, selector: #selector(UITableView.reloadData), name: NSNotification.Name.UIApplicationDidBecomeActive, object:nil)
+        
+NotificationCenter.default.post(name: NSNotification.Name(rawValue: "someNotification"), object: nil)
+```
+
+```
+   ninja.center = {
+            let x = (frame.minX + ninja.frame.width / 2)
+            let y = (frame.maxY - ninja.frame.height / 2)
+            return CGPoint(x: x, y: y)
+        }()
+```
+
