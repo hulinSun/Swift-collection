@@ -240,3 +240,5 @@ NotificationCenter.default.post(name: NSNotification.Name(rawValue: "someNotific
         }()
 ```
 
+#### 异常机制 抛出的错误类型探讨？
+
