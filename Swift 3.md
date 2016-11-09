@@ -242,3 +242,5 @@ NotificationCenter.default.post(name: NSNotification.Name(rawValue: "someNotific
 
 #### 异常机制 抛出的错误类型探讨？
 
+把错误类型的作用域限制在每个抽象层次。
+
