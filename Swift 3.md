@@ -256,13 +256,14 @@ NotificationCenter.default.post(name: NSNotification.Name(rawValue: "someNotific
 
 #### loadNib
 
+**dynamicType is deprecated. Use 'type(of …)' instead**
+
 ```
     func loadNib() -> UIView {
-        let bundle = NSBundle(forClass: self.dynamicType)
-        let nib = UINib(nibName: nibName(), bundle: bundle)
-        let view = nib.instantiateWithOwner(self, options: nil)[0] as! UIView
-        
-        return view
+        let bundel = Bundle(for: type(of: self))
+        let nib = UINib(nibName: "", bundle: bundel)
+        let v  = nib.instantiate(withOwner: self, options: nil).last as! UIView
+        return v
     }
 ```
 
