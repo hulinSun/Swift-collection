@@ -261,7 +261,8 @@ NotificationCenter.default.post(name: NSNotification.Name(rawValue: "someNotific
 ```
     func loadNib() -> UIView {
         let bundel = Bundle(for: type(of: self))
-        let nib = UINib(nibName: "", bundle: bundel)
+        let nibName =  type(of: self).description().components(separatedBy: ".").last!
+        let nib = UINib(nibName: nibName, bundle: bundel)
         let v  = nib.instantiate(withOwner: self, options: nil).last as! UIView
         return v
     }
