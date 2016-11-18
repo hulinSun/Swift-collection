@@ -244,3 +244,14 @@ NotificationCenter.default.post(name: NSNotification.Name(rawValue: "someNotific
 
 把错误类型的作用域限制在每个抽象层次。
 
+#### 控制器常量的统一管理
+
+```
+    struct Constants {
+        struct ColorPalette {
+            static let green = UIColor(red:0.00, green:0.87, blue:0.71, alpha:1.0)
+        }
+    }
+```
+
+
