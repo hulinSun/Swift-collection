@@ -266,6 +266,21 @@ NotificationCenter.default.post(name: NSNotification.Name(rawValue: "someNotific
         let v  = nib.instantiate(withOwner: self, options: nil).last as! UIView
         return v
     }
+    
+    
+public protocol UIViewLoading {}
+extension UIView : UIViewLoading {}
+public extension UIViewLoading where Self : UIView {
+    static func loadFromNib() -> Self {
+        let nibName = "\(self)".characters.split{$0 == "."}.map(String.init).last!
+        let nib = UINib(nibName: nibName, bundle: nil)
+        return nib.instantiate(withOwner: self, options: nil).last as! Self
+    }
+}
+
 ```
 
+
+#### 关于添加类似于GPUImage Cordov 的静态库问题
+**一定是要在工程中addfile才可以，直接拖是不行的,经典报错image not found**
 
