@@ -290,4 +290,8 @@ guard let className = NSClassFromString("classString") else {return}
 guard let model = className as? NSObject.Type else {return}
 let m = model.init()
 ```
+#### defer
+```
+Swift defer 函数完全退出时执行（常用于销毁数据）
+```
 
