@@ -284,3 +284,10 @@ public extension UIViewLoading where Self : UIView {
 #### 关于添加类似于GPUImage Cordov 的静态库问题
 **一定是要在工程中addfile才可以，直接拖是不行的,经典报错image not found**
 
+#### 类名创建对象
+```
+guard let className = NSClassFromString("classString") else {return}
+guard let model = className as? NSObject.Type else {return}
+let m = model.init()
+```
+
