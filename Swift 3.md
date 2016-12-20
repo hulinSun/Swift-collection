@@ -295,3 +295,30 @@ let m = model.init()
 Swift defer 函数完全退出时执行（常用于销毁数据）
 ```
 
+#### MVVM
+
+*ViewModel 负责提供数据， Observable<[Post]> 负责发送数据，供外界订阅数据*
+
+```
+
+class ViewModel {
+    private let provider = RxMoyaProvider<MyAPI>()
+    func getPosts() -> Observable<[Post]> {
+        return provider.request(.Show)
+            .filterSuccessfulStatusCodes()
+            .mapJSON()
+            .mapArray(type: Post.self)
+         }
+    }
+    
+    
+    // 控制器中
+viewModel.getPosts()
+            .subscribe(onNext: { (posts: [Post]) in
+                //do something with posts
+                print(posts.count)
+            })
+            .addDisposableTo(disposeBag)
+            
+```
+
