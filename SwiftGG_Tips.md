@@ -1085,6 +1085,19 @@ reversed = sort(names, >)
 reversed = sort(names) { $0 > $1 }
 ```
 
+#### IB
+
+你也可以将@IBInspectable属性添加到和用户定义的运行时属性兼容的类型属性里。这样，当开发者将自定义的视图添加到 Interface Builder 里后，就可以在监视器面板中编辑这些属性。
+
+```
+@IBDesignable
+
+class MyCustomView: UIView {
+    @IBInspectable var textColor: UIColor
+    @IBInspectable var iconHeight: CGFloat
+    /* ... */
+}
+```
 
 
 #####SwpieCell
