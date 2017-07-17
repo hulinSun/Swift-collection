@@ -83,7 +83,7 @@ class View: UIView {
     guard let context = UIGraphicsGetCurrentContext() else {
       return
     }
-    
+    #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
     let blue = UIColor.blue().cgColor
     context.setFillColor(blue)
     let red = UIColor.red().cgColor
